@@ -1,0 +1,9 @@
+server:
+  port: 9820
+
+spring:
+  application:
+    name: Committee
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/SMU_committee_db

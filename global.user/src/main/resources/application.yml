@@ -1,0 +1,9 @@
+server:
+  port: 9823
+
+spring:
+  application:
+    name: User
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/SMU_user_db
