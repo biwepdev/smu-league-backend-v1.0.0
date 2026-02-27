@@ -10,8 +10,10 @@ public interface UserEventHandler {
     Mono<User> create(UserCreatedCommand command);
     Mono<User> enable(UserEnableCommand command);
     Mono<User> disable(UserEnableCommand command);
-    Mono<User> changePassword(ChangePasswordCommand command);
-    Mono<User> addPassword(AddPasswordCommand command);
-    Mono<User> changeRole(ChangeRoleCommand command);
-    Mono<User> addRole(AddRoleCommand command);
+    Mono<User> changePassword(UserChangePasswordCommand command);
+    Mono<User> addPassword(UserAddPasswordCommand command);
+    Mono<User> changeRole(UserChangeRoleCommand command);
+    Mono<User> addRole(UserAddRoleCommand command);
+    Mono<User> changeUsername(UserChangeUsernameCommand command);
+    Mono<User> cancelRole(UserCancelRoleCommand command);
 }

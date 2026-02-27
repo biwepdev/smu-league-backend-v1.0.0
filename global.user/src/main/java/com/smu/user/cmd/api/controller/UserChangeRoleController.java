@@ -1,6 +1,6 @@
 package com.smu.user.cmd.api.controller;
 
-import com.smu.user.cmd.api.command.ChangeRoleCommand;
+import com.smu.user.cmd.api.command.UserChangeRoleCommand;
 import com.smu.user.core.dto.MessageResponse;
 import com.smu.user.query.api.handler.UserEventHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ public class UserChangeRoleController {
     @PostMapping("/change-role")
     @Operation(summary = "Change user role")
     public Mono<ResponseEntity<MessageResponse>> changeRole(
-            @Valid @RequestBody ChangeRoleCommand command
+            @Valid @RequestBody UserChangeRoleCommand command
     ) {
         return userEventHandler.changeRole(command)
                 .map(u -> ResponseEntity.ok(new MessageResponse(true, "Mise à jour du rôle utilisateur effectuée")))

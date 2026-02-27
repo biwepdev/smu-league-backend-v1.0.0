@@ -1,6 +1,6 @@
 package com.smu.user.cmd.api.controller;
 
-import com.smu.user.cmd.api.command.UserAddRoleCommand;
+import com.smu.user.cmd.api.command.UserChangeUsernameCommand;
 import com.smu.user.core.dto.MessageResponse;
 import com.smu.user.query.api.handler.UserEventHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,18 +16,18 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "api/v1/user/add-user-role")
+@RequestMapping(path = "api/v1/user/change-username")
 @Tag(name = "user")
-public class UserAddRoleController {
+public class UserChangeUsernameController {
     private final UserEventHandler userEventHandler;
 
-    @PostMapping("/add-role")
-    @Operation(summary = "Add role to user")
-    public Mono<ResponseEntity<MessageResponse>> addRole(
-            @Valid @RequestBody UserAddRoleCommand command
+    @PostMapping("/change-username")
+    @Operation(summary = "Change username")
+    public Mono<ResponseEntity<MessageResponse>> changeUsername(
+            @Valid @RequestBody UserChangeUsernameCommand command
     ) {
-        return userEventHandler.addRole(command)
-                .map(u -> ResponseEntity.ok(new MessageResponse(true, "Ajout du rôle réussi")))
+        return userEventHandler.changeUsername(command)
+                .map(u -> ResponseEntity.ok(new MessageResponse(true, "Mise à jour du username effectuée")))
                 .onErrorResume(ex ->
                         Mono.just(ResponseEntity.badRequest()
                                 .body(new MessageResponse(false, ex.getMessage())))

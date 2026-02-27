@@ -1,6 +1,6 @@
 package com.smu.user.cmd.api.controller;
 
-import com.smu.user.cmd.api.command.UserAddRoleCommand;
+import com.smu.user.cmd.api.command.UserAddPasswordCommand;
 import com.smu.user.core.dto.MessageResponse;
 import com.smu.user.query.api.handler.UserEventHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,18 +16,20 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "api/v1/user/add-user-role")
+@RequestMapping(path = "api/v1/user/add-user-password")
 @Tag(name = "user")
-public class UserAddRoleController {
+public class UserAddPasswordController {
     private final UserEventHandler userEventHandler;
 
-    @PostMapping("/add-role")
-    @Operation(summary = "Add role to user")
-    public Mono<ResponseEntity<MessageResponse>> addRole(
-            @Valid @RequestBody UserAddRoleCommand command
+    @PostMapping("/add-password")
+    @Operation(summary = "Add a password to a user")
+    public Mono<ResponseEntity<MessageResponse>> addPassword(
+            @Valid @RequestBody UserAddPasswordCommand command
     ) {
-        return userEventHandler.addRole(command)
-                .map(u -> ResponseEntity.ok(new MessageResponse(true, "Ajout du rôle réussi")))
+        return userEventHandler.addPassword(command)
+                .thenReturn(ResponseEntity.ok(
+                        new MessageResponse(true, "Password ajouté avec succès")
+                ))
                 .onErrorResume(ex ->
                         Mono.just(ResponseEntity.badRequest()
                                 .body(new MessageResponse(false, ex.getMessage())))

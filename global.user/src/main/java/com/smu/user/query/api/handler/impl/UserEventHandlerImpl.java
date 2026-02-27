@@ -24,7 +24,6 @@ public class UserEventHandlerImpl implements UserEventHandler {
     private final UserRepository userRepository;
     private final UserPayload userPayload;
 
-  //  private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public Mono<User> create(UserCreatedCommand command) {
@@ -70,7 +69,7 @@ public class UserEventHandlerImpl implements UserEventHandler {
     }
 
     @Override
-    public Mono<User> changePassword(ChangePasswordCommand command) {
+    public Mono<User> changePassword(UserChangePasswordCommand command) {
         if (!command.newPassword().equals(command.confirmPassword())) {
             return Mono.error(new IllegalArgumentException("Confirmation du mot de passe incorrecte"));
         }
@@ -91,7 +90,7 @@ public class UserEventHandlerImpl implements UserEventHandler {
     }
 
     @Override
-    public Mono<User> changeRole(ChangeRoleCommand command) {
+    public Mono<User> changeRole(UserChangeRoleCommand command) {
         return userRepository.findByUserCode(command.userCode())
                 .switchIfEmpty(Mono.error(new RuntimeException("Utilisateur introuvable")))
                 .flatMap(user -> {
@@ -104,7 +103,7 @@ public class UserEventHandlerImpl implements UserEventHandler {
     }
 
     @Override
-    public Mono<User> addRole(AddRoleCommand command) {
+    public Mono<User> addRole(UserAddRoleCommand command) {
         return userRepository.findByUserCode(command.userCode())
                 .flatMap(user -> {
 
@@ -114,6 +113,35 @@ public class UserEventHandlerImpl implements UserEventHandler {
 
                     user.setRoleCode(command.roleCode());
                     user.setRoleName(command.roleName());
+
+                    return userRepository.save(user);
+                });
+    }
+
+    @Override
+    public Mono<User> changeUsername(UserChangeUsernameCommand command) {
+        return userRepository.findByUserCode(command.userCode())
+                .switchIfEmpty(Mono.error(new RuntimeException("Username introuvable")))
+                .flatMap(user -> {
+
+                    user.setUserName(command.newUsername());
+
+                    return userRepository.save(user);
+                });
+    }
+
+    @Override
+    public Mono<User> cancelRole(UserCancelRoleCommand command) {
+        return userRepository.findByUserCode(command.userCode())
+                .switchIfEmpty(Mono.error(new RuntimeException("Utilisateur introuvable")))
+                .flatMap(user -> {
+
+                    if (!command.roleCode().equals(user.getRoleCode())) {
+                        return Mono.error(new RuntimeException("Le rôle ne correspond pas"));
+                    }
+
+                    user.setRoleCode(null);
+                    user.setRoleName(null);
 
                     return userRepository.save(user);
                 });
@@ -131,7 +159,7 @@ public class UserEventHandlerImpl implements UserEventHandler {
     }
 
     @Override
-    public Mono<User> addPassword(AddPasswordCommand command) {
+    public Mono<User> addPassword(UserAddPasswordCommand command) {
            if (!command.newPassword().equals(command.confirmPassword())) {
       return Mono.error(new IllegalArgumentException("Les mots de passe ne correspondent pas"));
     }

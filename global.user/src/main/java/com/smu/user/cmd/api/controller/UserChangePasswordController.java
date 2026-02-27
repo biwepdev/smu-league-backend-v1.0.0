@@ -1,6 +1,6 @@
 package com.smu.user.cmd.api.controller;
 
-import com.smu.user.cmd.api.command.ChangePasswordCommand;
+import com.smu.user.cmd.api.command.UserChangePasswordCommand;
 import com.smu.user.core.dto.MessageResponse;
 import com.smu.user.query.api.handler.UserEventHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ public class UserChangePasswordController {
     @PostMapping("/change-password")
     @Operation(summary = "Change user password")
     public Mono<ResponseEntity<MessageResponse>> changePassword(
-            @Valid @RequestBody ChangePasswordCommand command
+            @Valid @RequestBody UserChangePasswordCommand command
     ) {
         return userEventHandler.changePassword(command)
                 .map(u -> ResponseEntity.ok(new MessageResponse(true, "Mise à jour du mot de passe effectuée")))

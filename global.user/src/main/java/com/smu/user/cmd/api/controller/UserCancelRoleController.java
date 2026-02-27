@@ -1,6 +1,6 @@
 package com.smu.user.cmd.api.controller;
 
-import com.smu.user.cmd.api.command.AddPasswordCommand;
+import com.smu.user.cmd.api.command.UserCancelRoleCommand;
 import com.smu.user.core.dto.MessageResponse;
 import com.smu.user.query.api.handler.UserEventHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,20 +16,18 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "api/v1/user/add-user-password")
+@RequestMapping(path = "api/v1/user/cancel-user-role")
 @Tag(name = "user")
-public class AddPasswordController {
+public class UserCancelRoleController {
     private final UserEventHandler userEventHandler;
 
-    @PostMapping("/add-password")
-    @Operation(summary = "Add a password to a user")
-    public Mono<ResponseEntity<MessageResponse>> addPassword(
-            @Valid @RequestBody AddPasswordCommand command
+    @PostMapping("/cancel-role")
+    @Operation(summary = "Cancel user role")
+    public Mono<ResponseEntity<MessageResponse>> cancelRole(
+            @Valid @RequestBody UserCancelRoleCommand command
     ) {
-        return userEventHandler.addPassword(command)
-                .thenReturn(ResponseEntity.ok(
-                        new MessageResponse(true, "Password ajoute avec succes")
-                ))
+        return userEventHandler.cancelRole(command)
+                .map(u -> ResponseEntity.ok(new MessageResponse(true, "L'annulation du rôle utilisateur effectuée")))
                 .onErrorResume(ex ->
                         Mono.just(ResponseEntity.badRequest()
                                 .body(new MessageResponse(false, ex.getMessage())))
