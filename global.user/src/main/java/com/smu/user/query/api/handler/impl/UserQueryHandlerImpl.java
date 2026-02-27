@@ -54,6 +54,7 @@ public class UserQueryHandlerImpl implements UserQueryHandler {
                 user.getEmail(),
                 user.getMemberCode(),
                 user.getStaffCode(),
+                user.getPassword(),
                 user.getRoleCode(),
                 user.getRoleName(),
                 user.getStatus(),

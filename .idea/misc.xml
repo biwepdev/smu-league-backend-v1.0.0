@@ -6,6 +6,9 @@
       <list>
         <option value="$PROJECT_DIR$/global.user/pom.xml" />
         <option value="$PROJECT_DIR$/global.role/pom.xml" />
+        <option value="$PROJECT_DIR$/global.committee/pom.xml" />
+        <option value="$PROJECT_DIR$/global.post/pom.xml" />
+        <option value="$PROJECT_DIR$/global.village/pom.xml" />
       </list>
     </option>
   </component>

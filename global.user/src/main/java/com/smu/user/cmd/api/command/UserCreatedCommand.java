@@ -15,6 +15,10 @@ public record UserCreatedCommand(
         String fullName,
 
         @NotNull(message = "Required")
+        @Pattern(regexp = "^[\\p{L} -]{2,40}$", message = "doit avoir de 2 a 40 caracteres alphabetiques")
+        String userName,
+
+        @NotNull(message = "Required")
         @Pattern(regexp = "^\\+?[0-9]{8,15}$", message = "doit etre valide")
         @Schema(description = "Telephone number")
         String telephone,

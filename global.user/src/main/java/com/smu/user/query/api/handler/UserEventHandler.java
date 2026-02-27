@@ -11,7 +11,7 @@ public interface UserEventHandler {
     Mono<User> enable(UserEnableCommand command);
     Mono<User> disable(UserEnableCommand command);
     Mono<User> changePassword(ChangePasswordCommand command);
-//   Mono<User> addPassword(ChangePasswordCommand command);
+    Mono<User> addPassword(AddPasswordCommand command);
     Mono<User> changeRole(ChangeRoleCommand command);
     Mono<User> addRole(AddRoleCommand command);
 }

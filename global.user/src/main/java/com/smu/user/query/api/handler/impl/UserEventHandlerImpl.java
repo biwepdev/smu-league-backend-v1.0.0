@@ -34,7 +34,7 @@ public class UserEventHandlerImpl implements UserEventHandler {
                                     User user = User.builder()
                                             .userId(UUID.randomUUID().toString())
                                             .fullName(command.fullName())
-                                            .userName(command.email())
+                                            .userName(command.userName())
                                             .telephone(command.telephone())
                                             .email(command.email())
                                             .memberCode(command.memberCode())
@@ -105,14 +105,10 @@ public class UserEventHandlerImpl implements UserEventHandler {
 
     @Override
     public Mono<User> addRole(AddRoleCommand command) {
-        if (command.roleCode() == null || command.roleName() == null) {
-            return Mono.error(new IllegalArgumentException("Role invalide"));
-        }
-
         return userRepository.findByUserCode(command.userCode())
                 .flatMap(user -> {
 
-                    if (user.getRoleCode() != null && !user.getRoleCode().isEmpty()) {
+                    if (user.getRoleCode() != null && !user.getRoleCode().isBlank()) {
                         return Mono.error(new RuntimeException("Un rôle est déjà attribué"));
                     }
 
@@ -134,39 +130,21 @@ public class UserEventHandlerImpl implements UserEventHandler {
         }
     }
 
-//    @Override
-//    public Mono<User> addPassword(ChangePasswordCommand command) {
-//            if (!command.newPassword().equals(command.confirmPassword())) {
-//                return Mono.error(new IllegalArgumentException("Les mots de passe ne correspondent pas"));
-//            }
-//
-//            return userRepository.findById(command.userId())
-//                    .switchIfEmpty(Mono.error(new RuntimeException("Utilisateur introuvable")))
-//                    .flatMap(user -> {
-//
-//                        if (user.getPassword() != null) {
-//                            return Mono.error(new RuntimeException("Mot de passe déjà défini"));
-//                        }
-//
-//                        user.setPassword(passwordEncoder.encode(command.newPassword()));
-//                        return userRepository.save(user);
-//                    });
-//    }
+    @Override
+    public Mono<User> addPassword(AddPasswordCommand command) {
+           if (!command.newPassword().equals(command.confirmPassword())) {
+      return Mono.error(new IllegalArgumentException("Les mots de passe ne correspondent pas"));
+    }
+    return userRepository.findById(command.userId())
+            .switchIfEmpty(Mono.error(new RuntimeException("Utilisateur introuvable")))
+            .flatMap(user -> {
 
+                if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                    return Mono.error(new RuntimeException("Mot de passe déjà défini"));
+                }
 
-//     if (!command.newPassword().equals(command.confirmPassword())) {
-//        return Mono.error(new IllegalArgumentException("Les mots de passe ne correspondent pas"));
-//    }
-//
-//    return userRepository.findById(command.userId())
-//            .switchIfEmpty(Mono.error(new RuntimeException("Utilisateur introuvable")))
-//            .flatMap(user -> {
-//
-//        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-//            return Mono.error(new RuntimeException("Mot de passe déjà défini"));
-//        }
-//
-//        user.setPassword(passwordEncoder.encode(command.newPassword()));
-//        return userRepository.save(user);
-//    });
+                user.setPassword(hashPassword(command.newPassword()));
+                return userRepository.save(user);
+            });
+    }
 }

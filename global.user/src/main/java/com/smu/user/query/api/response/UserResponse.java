@@ -14,6 +14,7 @@ public record UserResponse(
         String email,
         String memberCode,
         String staffCode,
+        String password,
         String roleCode,
         String roleName,
         String status,
